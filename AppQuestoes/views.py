@@ -1,0 +1,390 @@
+# -*- coding: utf-8 -*-
+
+# Projeto
+from models import QuestaoDeMultiplaEscolha, Concurso, Banca, Prova, Assunto, Disciplina, UserProfile, AreaDeAtuacao, QuestoesRespondidas, Questao, _QuestaoDeMultiplaEscolha, _QuestaoDeVerdadeiroOuFalso, QuestaoDeVerdadeiroOuFalso
+# Django
+from django.contrib.comments.models import *
+from django.contrib.auth.models import User
+from django.shortcuts import render_to_response
+from django.template import RequestContext
+from django.core.context_processors import csrf
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth.forms import UserCreationForm
+from django.contrib.auth import authenticate, login
+from django.http import HttpResponseRedirect
+from django.views.decorators.csrf import csrf_exempt
+from django.db import IntegrityError, transaction
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
+# Python
+import itertools, random
+
+QUERY_MULTIPLA_ESCOLHA = """SELECT
+    QII.questao_ptr_id,
+    QII."alternativa_A",
+    QII."alternativa_B",
+    QII."alternativa_C",
+    QII."alternativa_D",
+    QII."alternativa_E",
+    QII.gabarito FROM "AppQuestoes_questaodemultiplaescolha" QII
+    INNER JOIN "AppQuestoes_questao" Q ON Q.id = QII.questao_ptr_id
+    INNER JOIN "AppQuestoes_prova" P ON Q.prova_id = P.id
+    INNER JOIN "AppQuestoes_questao_assunto" QA ON Q.id = QA.questao_id
+    INNER JOIN "AppQuestoes_assunto" A ON QA.assunto_id = A.id
+    INNER JOIN "AppQuestoes_disciplina" D ON A.disciplina_id = D.id
+    INNER JOIN "AppQuestoes_concurso" C ON P.concurso_id = C.id
+    INNER JOIN "AppQuestoes_banca" B ON C.banca_id = B.id
+    INNER JOIN "AppQuestoes_areadeatuacao" AT ON P.area_de_atuacao_id = AT.id"""
+
+QUERY_VERDADEIRO_OU_FALSO = """SELECT
+    QII.questao_ptr_id,
+    QII."gabarito",
+    QII.gabarito FROM "AppQuestoes_questaodeverdadeirooufalso" QII
+    INNER JOIN "AppQuestoes_questao" Q ON Q.id = QII.questao_ptr_id
+    INNER JOIN "AppQuestoes_prova" P ON Q.prova_id = P.id
+    INNER JOIN "AppQuestoes_questao_assunto" QA ON Q.id = QA.questao_id
+    INNER JOIN "AppQuestoes_assunto" A ON QA.assunto_id = A.id
+    INNER JOIN "AppQuestoes_disciplina" D ON A.disciplina_id = D.id
+    INNER JOIN "AppQuestoes_concurso" C ON P.concurso_id = C.id
+    INNER JOIN "AppQuestoes_banca" B ON C.banca_id = B.id
+    INNER JOIN "AppQuestoes_areadeatuacao" AT ON P.area_de_atuacao_id = AT.id"""
+
+# Inicializa variáveis comuns:
+questoes = concursos = bancas = provas = disciplinas = assuntos = areas_de_atuacao = anos = instituicoes = cargos = niveis_de_ensino = []
+nivel_de_preparo = num_questoes_respondidas_pelo_user = num_questoes_acertadas_pelo_user = 0
+
+def preencheForm():
+    concursos = Concurso.objects.all()
+    bancas = Banca.objects.all()
+    provas = Prova.objects.all()
+    disciplinas = Disciplina.objects.all()
+    assuntos = Assunto.objects.all()
+    areas_de_atuacao = AreaDeAtuacao.objects.all()
+
+    lst_anos = []
+    lst_instituicoes = []
+    for concurso in concursos:
+        lst_anos.append(concurso.ano)
+        lst_instituicoes.append(concurso.instituicao)
+
+    lst_cargos = []
+    lst_niveis_de_ensino = []
+    for prova in provas:
+        lst_cargos.append(prova.cargo)
+        lst_niveis_de_ensino.append(prova.nivel_de_ensino)
+
+    anos = set(lst_anos)
+    instituicoes = set(lst_instituicoes)
+    cargos = set(lst_cargos)
+    niveis_de_ensino = set(lst_niveis_de_ensino)
+
+    return (
+        concursos,
+        bancas,
+        provas,
+        disciplinas,
+        assuntos,
+        areas_de_atuacao,
+        anos,
+        instituicoes,
+        cargos,
+        niveis_de_ensino,
+    )
+
+def completaQuery(request, query):
+    if (request.method == 'POST') and (request.POST is not None):
+
+        if request.POST['TAI'] == "on":
+            query += """ WHERE Q."nivel_de_dificuldade" >= %s""" % UserProfile.objects.get(user__id=request.user.id).nivel_de_preparo
+        else:
+            query += """ WHERE Q."nivel_de_dificuldade" >= %s""" % "0" # busca todas as questões
+
+        if request.POST['cargo'] != '':
+            query += " AND P.cargo = '%s'" % request.POST['cargo']
+
+        if request.POST['instituicao'] != '':
+            query += " AND C.instituicao = '%s'" % request.POST['instituicao']
+
+        if request.POST['nivel_de_ensino'] != '':
+            query += " AND P.nivel_de_ensino = '%s'" % request.POST['nivel_de_ensino']
+
+        if request.POST['ano'] != '':
+            query += " AND C.ano = %s" % request.POST['ano']
+
+        if request.POST['prova'] != '':
+            query += " AND P.id = %s" % request.POST['prova']
+
+        if request.POST['assunto'] != '':
+            query += " AND A.id = %s" % request.POST['assunto']
+
+        if request.POST['disciplina'] != '':
+            query += " AND D.id = %s" % request.POST['disciplina']
+
+        if request.POST['concurso'] != '':
+            query += " AND C.id = %s" % request.POST['concurso']
+
+        if request.POST['banca'] != '':
+            query += " AND B.id = %s" % request.POST['banca']
+
+        if request.POST['area_de_atuacao'] != '':
+            query += " AND P.area_de_atuacao_id = %s" % request.POST['area_de_atuacao']
+
+        # "Simbolico", o trecho que realmente define a quantidade de questoes está mais adiante:
+        if request.POST['quantidade_questoes'] != '':
+            query += " LIMIT %s;" % request.POST['quantidade_questoes']
+
+    return query
+
+def buscaDadosDoUser(user):
+    nivel_de_preparo = UserProfile.objects.get(user__id=user.id).nivel_de_preparo
+    num_questoes_respondidas_pelo_user = len(QuestoesRespondidas.objects.filter(user=user.id))
+    num_questoes_acertadas_pelo_user = len(QuestoesRespondidas.objects.filter(user=user.id, acertou=True))
+    return (nivel_de_preparo, num_questoes_respondidas_pelo_user, num_questoes_acertadas_pelo_user)
+
+def listaQuestoesDeMultiplaEscolha(request):
+    query = completaQuery(request, QUERY_MULTIPLA_ESCOLHA)
+    return QuestaoDeMultiplaEscolha.objects.raw(query)
+
+def listaQuestoesDeVerdadeiroOuFalso(request):
+    query = completaQuery(request, QUERY_VERDADEIRO_OU_FALSO)
+    return QuestaoDeVerdadeiroOuFalso.objects.raw(query)
+
+def listaQuestoes(request):
+
+    if len(request.POST) == 0:
+        questoes = itertools.chain(listaQuestoesDeMultiplaEscolha(request), listaQuestoesDeVerdadeiroOuFalso(request))
+        questoes2 = []
+        for questao in questoes: questoes2.append(questao)
+        random.shuffle(questoes2)
+        questoes = questoes2[0:10]
+        return questoes
+    if request.POST['tipo_de_questao'] == 'multipla_escolha':
+        questoes = listaQuestoesDeMultiplaEscolha(request)
+    elif request.POST['tipo_de_questao'] == 'verdadeiro_ou_falso':
+        questoes = listaQuestoesDeVerdadeiroOuFalso(request)
+    else:
+        questoes = itertools.chain(listaQuestoesDeMultiplaEscolha(request), listaQuestoesDeVerdadeiroOuFalso(request))
+
+    questoes2 = []
+
+    for questao in questoes: questoes2.append(questao)
+    random.shuffle(questoes2)
+    questoes = questoes2[0:int(request.POST['quantidade_questoes'])]
+
+    return questoes
+
+def index(request):
+    if len(request.POST) != 0: 
+        if request.POST['TAI'] == 'on':
+            return listaQuestoesDoNivelDoUser(request)
+
+    try:
+        nivel_de_preparo, num_questoes_respondidas_pelo_user, num_questoes_acertadas_pelo_user = buscaDadosDoUser(request.user)
+    except:
+        nivel_de_preparo = num_questoes_respondidas_pelo_user = num_questoes_acertadas_pelo_user = 0
+
+    concursos, bancas, provas, disciplinas, assuntos, areas_de_atuacao, anos, instituicoes, cargos, niveis_de_ensino = preencheForm()
+
+    lista_questoes = listaQuestoes(request)
+    paginator = Paginator(lista_questoes, 5)
+
+    try:
+        page = int(request.GET.get('page', '1'))
+    except ValueError:
+        page = 1
+
+    try:
+        questoes = paginator.page(page)
+    except PageNotAnInteger:
+        # If page is not an integer, deliver first page.
+        questoes = paginator.page(1)
+    except EmptyPage:
+        # If page is out of range (e.g. 9999), deliver last page of results.
+        questoes = paginator.page(paginator.num_pages)
+
+    return render_to_response('principal.html',
+        {
+            'nivel_de_preparo': nivel_de_preparo,
+            'numero_questoes_respondidas_pelo_user': num_questoes_respondidas_pelo_user,
+            'numero_questoes_acertadas_pelo_user': num_questoes_acertadas_pelo_user,
+
+            'questoes': questoes,
+            'concursos': concursos,
+            'bancas': bancas,
+            'provas': provas,
+            'cargos': cargos,
+            'disciplinas': disciplinas,
+            'assuntos': assuntos,
+            'anos': anos,
+            'instituicoes': instituicoes,
+            'areas_de_atuacao': areas_de_atuacao,
+            'niveis_de_ensino': niveis_de_ensino,
+        }, context_instance=RequestContext(request))
+
+@login_required
+def listaQuestoesDoNivelDoUser(request):
+    nivel_de_preparo, num_questoes_respondidas_pelo_user, num_questoes_acertadas_pelo_user = buscaDadosDoUser(request.user)
+    return render_to_response('TAI.html', { 'questoes': listaQuestoes(request), }, context_instance=RequestContext(request))
+
+@transaction.commit_manually
+def ajustaNiveis(user, _questao):
+
+    user_profile = UserProfile.objects.get(user__id=user.id)
+    user = user_profile.user
+    questao = Questao.objects.get(pk=_questao.id)
+
+    try:
+        QuestoesRespondidas.objects.create(user=user, questao=questao, acertou=_questao.acertou)
+    except IntegrityError:
+        transaction.rollback()
+
+    if (questao.nivel_de_dificuldade >= user_profile.nivel_de_preparo):
+        diferenca = questao.nivel_de_dificuldade - user_profile.nivel_de_preparo
+        if (_questao.acertou == True):
+            if (diferenca in [9, 8]):
+                # Questão = IMPOSSIVEL p/ o User
+                user_profile.nivel_de_preparo += 2
+                questao.nivel_de_dificuldade -= 2
+            if (diferenca in [7, 6, 5]):
+                # Questão = MUITO Dificil p/ o User
+                user_profile.nivel_de_preparo += 2
+                questao.nivel_de_dificuldade -= 1
+            elif (diferenca in [4, 3]):
+                # Questao = Dificil p/ o User
+                user_profile.nivel_de_preparo += 1
+                questao.nivel_de_dificuldade -= 1
+            elif ((diferenca >= 0) and (diferenca < 3)):
+                print "+ 1"
+                # Questao = Dificil p/ o User
+                user_profile.nivel_de_preparo += 1
+                questao.nivel_de_dificuldade -= 0
+            else:
+                print "passou"
+                pass
+        else: #(acertou == False)
+            if (diferenca in [3, 2, 1, 0]):
+                questao.nivel_de_dificuldade += 1
+            else:
+                pass #pela dificuldade espera-se que o User erre
+
+    user_profile.save()
+    questao.save()
+
+    transaction.commit()
+
+#comentarios = []
+#questoes = []
+#_questoes = []
+
+#comentarios = Comment.objects.all()
+#questoes = QuestaoDeMultiplaEscolha.objects.all()
+
+#_alternativa_selecionada = "A"
+
+#for questao in questoes:
+
+#    try:
+#        _comentarios = Comment.objects.get(object_pk=questao.id)
+#    except:
+#        _comentarios = []
+
+#    _questao = _QuestaoDeMultiplaEscolha(
+#        id=questao.id,
+#        prova=questao.prova,
+#        assunto=questao.assunto,
+#        enunciado=questao.enunciado,
+#        alternativa_A=questao.alternativa_A,
+#        alternativa_B=questao.alternativa_B,
+#        alternativa_C=questao.alternativa_C,
+#        alternativa_D=questao.alternativa_D,
+#        alternativa_E=questao.alternativa_E,
+#        gabarito=questao.gabarito,
+#        acertou=(1 if questao.gabarito == _alternativa_selecionada else 0),
+#        alternativa_selecionada=_alternativa_selecionada,
+#        comentarios=_comentarios
+#    )
+#    _questoes.append(_questao)
+
+#for _q in _questoes:
+#    print _q.id
+#    print _q.comentarios
+
+def corrigeTAI(request):
+    lst_questoes = []
+
+    post = request.POST.copy() #O QueryDict agora é mutavel
+    post.pop('csrfmiddlewaretoken')
+
+    for value in post.items():
+        _id = value[0]
+        _alternativa_selecionada = value[1]
+
+        try:
+            _comentarios = Comment.objects.get(object_pk=questao.id)
+        except:
+            _comentarios = []
+
+        try:
+            questao = QuestaoDeMultiplaEscolha.objects.get(pk=_id)
+
+            _questao = _QuestaoDeMultiplaEscolha(
+                id=questao.id,
+                prova=questao.prova,
+                assunto=questao.assunto,
+                enunciado=questao.enunciado,
+                alternativa_A=questao.alternativa_A,
+                alternativa_B=questao.alternativa_B,
+                alternativa_C=questao.alternativa_C,
+                alternativa_D=questao.alternativa_D,
+                alternativa_E=questao.alternativa_E,
+                gabarito=questao.gabarito,
+                acertou=(1 if questao.gabarito == _alternativa_selecionada else 0),
+                alternativa_selecionada=_alternativa_selecionada,
+                comentarios=_comentarios
+            )
+        except:
+            questao = QuestaoDeVerdadeiroOuFalso.objects.get(pk=_id)
+
+            if _alternativa_selecionada == "1":
+                _alternativa_selecionada = True
+            else:
+                _alternativa_selecionada = False
+
+            _questao = _QuestaoDeVerdadeiroOuFalso(
+                id=questao.id,
+                prova=questao.prova,
+                assunto=questao.assunto,
+                enunciado=questao.enunciado,
+                gabarito=questao.gabarito,
+                acertou=(1 if questao.gabarito == _alternativa_selecionada else 0),
+                alternativa_selecionada=("Verdadeiro" if _alternativa_selecionada is True else "Falso"),
+                comentarios=_comentarios
+            )
+
+        lst_questoes.append(_questao)
+        ajustaNiveis(request.user, _questao)
+
+        for _q in lst_questoes:
+            print _q.id
+            print _q.comentarios
+
+    return render_to_response('TAI_correcao.html', { 'lst_questoes': lst_questoes, }, context_instance=RequestContext(request))
+
+def autoLogin(request):
+    post = request.POST
+    username = post['username']
+    password = post['password1']
+    user = authenticate(username=username, password=password)
+    if user.is_active:
+        login(request, user)
+
+def register(request):
+    if request.method == 'POST':
+        form = UserCreationForm(request.POST, request.FILES)
+        if form.is_valid():
+            user = form.save()
+            user.userprofile_set.create()
+            autoLogin(request)
+            return HttpResponseRedirect('/')
+    else:
+        form = UserCreationForm()
+    return render_to_response('register.html', {'form': form}, context_instance=RequestContext(request))

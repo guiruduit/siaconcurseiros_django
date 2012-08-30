@@ -1,0 +1,63 @@
+{% extends 'base.html' %}
+
+{% block body %}
+
+<header>
+{% if user.id != None %}
+    <div id="link-logout">
+        {{ user }} | <a href="/logout/">Logout</a>
+    </div>
+{% else %}
+    <div id="link-login">
+        <a href="/login/">Login</a>
+    </div>
+{% endif %}
+</header>
+
+<input type="hidden" id="quantidade-questoes" />
+
+<form id="form-teste-tai" class="" action="/corrige_TAI/" method="post">
+{% csrf_token %}
+
+    {% for questao in questoes %}
+        <div class="questao">
+
+            <ul>
+                <li class="enunciado">
+                    <p>{{ questao.prova }} - {{ questao.id }}. {{ questao.enunciado|safe }}</p>
+                </li>
+
+                <li class="alternativa">
+                    <input type="radio" name="{{ questao.id }}" value="A">A. {{ questao.alternativa_A|safe }}</input>
+                </li>
+
+                <li class="alternativa">
+                    <input type="radio" name="{{ questao.id }}" value="B">B. {{ questao.alternativa_B|safe }}</input>
+                </li>
+
+                <li class="alternativa">
+                    <input type="radio" name="{{ questao.id }}" value="C">C. {{ questao.alternativa_C|safe }}</input>
+                </li>
+
+                {% if questao.alternativa_D %}
+                <li class="alternativa}">
+                    <input type="radio" name="{{ questao.id }}" value="D">D. {{ questao.alternativa_D|safe }}</input>
+                </li>
+                {% endif %}
+
+                {% if questao.alternativa_E %}
+                <li class="alternativa">
+                    <input type="radio" name="{{ questao.id }}" value="E">E. {{ questao.alternativa_E|safe }}</input>
+                </li>
+                {% endif %}
+            </ul>
+
+        </div>
+
+    {% empty %}
+        <span class="erro">Não há questões cadastradas</span>
+    {% endfor %}
+
+    <input type="submit" class="botao-resolver" value="Resolver" />
+</form>
+{% endblock body %}

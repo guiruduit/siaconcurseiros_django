@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+{% load uni_form_tags %}
+{% block body %}
+
+<section id="login">
+    <form action="." method="post" class="uniForm">
+        {% csrf_token %}
+        {{ form|as_uni_form }}
+        <button type="submit">Login</button>
+    </form>
+</section>
+
+<a href="{% url AppQuestoes.views.register %}">Cadastrar-se</a>
+
+{% endblock body %}

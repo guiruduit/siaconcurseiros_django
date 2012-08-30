@@ -1,0 +1,197 @@
+{% extends 'base.html' %}
+
+{% block body %}
+
+<header>
+{% if user.id != None %}
+    <div id="link-logout">
+        {{ user }} | <a href="/logout/">Logout</a>
+    </div>
+{% else %}
+    <div id="link-login">
+        <a href="/login/">Login</a>
+    </div>
+{% endif %}
+</header>
+
+<form id="form-selec-qst" class="" action="." method="post">
+{% csrf_token %}
+
+    <table id="table-selec-qst">
+
+        <tr>
+
+            <td>
+                Concurso:
+                <select name="concurso">
+                    <option value="">Todos</option>
+                    {% for concurso in concursos %}
+                        <option value="{{ concurso.id }}">{{ concurso }}</option>
+                    {% endfor %}
+                </select>
+            </td>
+
+            <td>
+                Instituição:
+                <select name="instituicao">
+                    <option value="{{ None }}">Todos</option>
+                    {% for instituicao in instituicoes %}
+                        <option value="{{ instituicao }}">{{ instituicao }}</option>
+                    {% endfor %}
+                </select>
+            </td>
+
+            <td>
+                Ano:
+                <select name="ano">
+                    <option value="">Todos</option>
+                    {% for ano in anos %}
+                        <option value="{{ ano }}">{{ ano }}</option>
+                    {% endfor %}
+                </select>
+            </td>
+
+            <td>
+                Banca:
+                <select name="banca">
+                    <option value="">Todos</option>
+                    {% for banca in bancas %}
+                        <option value="{{ banca.id }}">{{ banca }}</option>
+                    {% endfor %}
+                </select>
+            </td>
+
+        </tr>
+
+        <tr>
+
+            <td>
+                Cargo:
+                <select name="cargo">
+                    <option value="">Todos</option>
+                    {% for cargo in cargos %}
+                        <option value="{{ cargo }}">{{ cargo }}</option>
+                    {% endfor %}
+                </select>
+            </td>
+
+            <td>
+                Prova:
+                <select name="prova">
+                    <option value="">Todos</option>
+                    {% for prova in provas %}
+                        <option value="{{ prova.id }}">{{ prova }}</option>
+                    {% endfor %}
+                </select>
+            </td>
+
+            <td>
+                Disciplina:
+                <select name="disciplina">
+                    <option value="">Todas</option>
+                    {% for disciplina in disciplinas %}
+                        <option value="{{ disciplina.id }}">{{ disciplina }}</option>
+                    {% endfor %}
+                </select>
+            </td>
+
+            <td>
+                Assunto:
+                <select name="assunto">
+                    <option value="">Todos</option>
+                    {% for assunto in assuntos %}
+                        <option value="{{ assunto.id }}">{{ assunto }}</option>
+                    {% endfor %}
+                </select>
+            </td>
+
+        </tr>
+
+        <tr>
+
+            <td colspan="2">
+                Área de Atuação:
+                <select name="area_de_atuacao">
+                    <option value="">Todas</option>
+                    {% for area_de_atuacao in areas_de_atuacao %}
+                        <option value="{{ area_de_atuacao.id }}">{{ area_de_atuacao }}</option>
+                    {% endfor %}
+                </select>
+            </td>
+
+            <td colspan="2">
+                Nível de Ensino:
+                <select name="nivel_de_ensino">
+                    <option value="">Todos</option>
+                    {% for nivel_de_ensino in niveis_de_ensino %}
+                        <option value="{{ nivel_de_ensino }}">{{ nivel_de_ensino }}</option>
+                    {% endfor %}
+<!--                    <option value="fundamental">Fundamental</option>-->
+<!--                    <option value="medio">Médio</option>-->
+<!--                    <option value="superior">Superior</option>-->
+<!--                    <option value="tecnico">Técnico</option>-->
+                </select>
+            </td>
+
+            <td colspan="4">
+                <input type="text" name="quantidade_questoes"></input>
+            </td>
+
+        </tr>
+
+        <tr>
+
+            <td colspan="4">
+                <input type="submit" class="botao-filtrar-qst" value="Filtrar Questões" />
+            </td>
+
+        </tr>
+
+    </table>
+
+</form>
+
+{% for questao in questoes %}
+    <form id="qst-{{ questao.id }}" class="questao" value="{{ questao.id }}" action="." method="." onsubmit="return false;">
+
+        <ul>
+            <li class="enunciado">
+                <p>{{ questao.prova }} - {{ questao.id }}. {{ questao.enunciado|safe }}</p>
+            </li>
+
+            <li class="alternativa">
+                <input type="radio" name="alternativa" id="alt-{{ questao.id }}-A" value="A">A. {{ questao.alternativa_A|safe }}</input>
+            </li>
+
+            <li class="alternativa">
+                <input type="radio" name="alternativa" id="alt-{{ questao.id }}-B" value="B">B. {{ questao.alternativa_B|safe }}</input>
+            </li>
+
+            <li class="alternativa">
+                <input type="radio" name="alternativa" id="alt-{{ questao.id }}-C" value="C">C. {{ questao.alternativa_C|safe }}</input>
+            </li>
+
+            {% if questao.alternativa_D %}
+            <li class="alternativa">
+                <input type="radio" name="alternativa" id="alt-{{ questao.id }}-D" value="D">D. {{ questao.alternativa_D|safe }}</input>
+            </li>
+            {% endif %}
+
+            {% if questao.alternativa_E %}
+            <li class="alternativa">
+                <input type="radio" name="alternativa" id="alt-{{ questao.id }}-E" value="E">E. {{ questao.alternativa_E|safe }}</input>
+            </li>
+            {% endif %}
+        </ul>
+
+        <input type="hidden" id="gab-{{ questao.id }}" value="{{ questao.gabarito }}" />
+
+        <input type="submit" class="botao-resolver" value="Resolver" />
+
+        <span id="resp-{{ questao.id }}"></span>
+    </form>
+{% empty %}
+    <span class="erro">Não há questões cadastradas</span>
+{% endfor %}
+
+{% endblock body %}

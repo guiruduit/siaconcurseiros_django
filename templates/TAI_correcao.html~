@@ -1,0 +1,129 @@
+{% extends 'base.html' %}
+
+{% block body %}
+
+{% include 'cabecalho.html' %}
+
+{% for questao in lst_questoes %}
+    <div class="questao">
+
+        <ul>
+            <li class="enunciado">
+                <p>{{ questao.prova }} - {{ questao.id }}. {{ questao.enunciado|safe }}</p>
+            </li>
+
+            {% if questao.alternativa_A %}
+                <li class="alternativa">
+                    <input type="radio" name="alternativa" id="alt-{{ questao.id }}-A" value="A">A. {{ questao.alternativa_A|safe }}</input>
+                </li>
+
+                <li class="alternativa">
+                    <input type="radio" name="alternativa" id="alt-{{ questao.id }}-B" value="B">B. {{ questao.alternativa_B|safe }}</input>
+                </li>
+
+                <li class="alternativa">
+                    <input type="radio" name="alternativa" id="alt-{{ questao.id }}-C" value="C">C. {{ questao.alternativa_C|safe }}</input>
+                </li>
+            {% else %}
+                <li>
+                    <input type="radio" name="{{ questao.id }}" value="1">Verdadeiro</input>
+                </li>
+                <li>
+                    <input type="radio" name="{{ questao.id }}" value="0">Falso</input>
+                </li>
+            {% endif %}
+
+            {% if questao.alternativa_D %}
+            <li class="alternativa}">
+                <input type="radio" name="{{ questao.id }}" value="D">D. {{ questao.alternativa_D|safe }}</input>
+            </li>
+            {% endif %}
+
+            {% if questao.alternativa_E %}
+            <li class="alternativa">
+                <input type="radio" name="{{ questao.id }}" value="E">E. {{ questao.alternativa_E|safe }}</input>
+            </li>
+            {% endif %}
+        </ul>
+
+        {% if questao.acertou == 1 %}
+        <span class="resposta_correta">
+            Alternativa selecionada: {{ questao.alternativa_selecionada }}
+            - Você Acertou!
+        </span>
+        {% else %}
+        <span class="resposta_errada">
+            Alternativa selecionada: {{ questao.alternativa_selecionada }}
+            - Você Errou (A Resposta Correta é: {{ questao.gabarito }})
+        </span>
+        {% endif %}
+
+    </div>
+
+    <div class="comentarios">
+    <div class="comentarios_titulo">Comentários</div>
+        <div class="comentarios_conteudo">
+        {% for comentarios in questao.comentarios %}
+        {% for comentario in comentarios %}
+            <div class="comentario">
+                Nome: {{ comentario.name }}<br/>
+                {% if comentario.url %}
+                    URL: {{ comentario.url }}
+                {% endif %}
+                <div class="comentario_conteudo">
+                    {{ comentario.comment|linebreaks }}
+                </div>
+            </div>
+        {% endfor %}
+        {% endfor %}
+
+        <form action="/comments/post/" method="post">
+            {% csrf_token %}
+            <div><input type="hidden" name="content_type" value="{{ questao.tipo }}" id="id_content_type" /></div> 
+            <div><input type="hidden" name="object_pk" value="4" id="id_object_pk" /></div> 
+            <div><input type="hidden" name="timestamp" value="1335059247" id="id_timestamp" /></div> 
+            <div><input type="hidden" name="security_hash" value="bc088ebc4d7494ac05d5b69d7c80ba51c68e0bc7" id="id_security_hash" /></div> 
+
+            <p> 
+                <label for="id_name">Nome</label>
+                <input id="id_name" type="text" name="name" maxlength="50" disabled value="{{ user }}" />
+            </p>
+
+            <p> 
+                <label for="id_email">Endereço de e-mail</label>
+                <input type="text" name="email" id="id_email" disabled value="{{ user.email }}"/> 
+            </p> 
+
+            <p> 
+                <label for="id_url">URL</label>
+                <input type="text" name="url" id="id_url" /> 
+            </p> 
+
+            <p> 
+                <label for="id_comment">Comentário</label>
+                <textarea id="id_comment" rows="10" cols="40" name="comment"></textarea> 
+            </p> 
+
+            <p style="display:none;"> 
+                <label for="id_honeypot">Se você inserir qualquer coisa neste campo, seu comentário será tratado como spam</label>
+                <input type="text" name="honeypot" id="id_honeypot" /> 
+            </p> 
+
+            <p class="submit"> 
+                <input type="submit" name="post" class="submit-post" value="Publicar" /> 
+                <input type="submit" name="preview" class="submit-preview" value="Visualizar" /> 
+            </p> 
+        </form>
+
+        </div>
+    </div>
+
+{% empty %}
+    Erro no recebimento das questões.
+{% endfor %}
+
+<form action="/">
+    <input type="submit" value="Voltar para a Home" />
+</form>
+
+{% endblock body %}

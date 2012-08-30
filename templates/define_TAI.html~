@@ -1,0 +1,12 @@
+{% extends 'base.html' %}
+
+{% block body %}
+
+{% include 'cabecalho.html' %}
+
+<form id="form-selec-qst" class="" action="/TAI/" method="post">
+    {% include 'form_filtra_questoes.html' %}
+    <input type="hidden" name="eh_TAI" value="1">
+</form>
+
+{% endblock body %}

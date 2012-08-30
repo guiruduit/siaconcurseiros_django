@@ -1,0 +1,14 @@
+<header>
+{% if user.id != None %}
+    <div id="link-logout">
+        <label title="Nível de Preparo: {{ nivel_de_preparo }}
+    Questões Respondidas: {{ numero_questoes_respondidas_pelo_user }}
+    Questões Respondidas Corretamente: {{ numero_questoes_acertadas_pelo_user }}">{{ user }}</label>
+        | <a href="/logout/">Logout</a>
+    </div>
+{% else %}
+    <div id="link-login">
+        <a href="/login/">Login</a>
+    </div>
+{% endif %}
+</header>

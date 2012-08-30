@@ -1,0 +1,143 @@
+{% extends 'base.html' %}
+
+{% load comments %}
+
+{% block body %}
+
+<script>
+$(document).ready(function(){
+
+    $(".comentarios_conteudo").toggle();
+    $(".comentarios_titulo").click(function(){
+        var comentarios = $(this).parent(".comentarios");
+        comentarios.children(".comentarios_conteudo").slideToggle();
+    });
+
+    $('form[id^="qst-"]').submit(function(){
+        if ( $(this).children('ul').children('li').children('input:checked').val() == null ) {
+            alert("É necessário marcar uma das alternativas antes.")
+        } else {
+            var _id = $(this).attr('id').slice(4);
+            var _gabarito = $(this).children('#gab-' + _id).val();
+            var _alternativa_selecionada = $(this).children('ul').children('li').children('input:checked').val();
+
+            $(this).children('ul').children('li').children('input').attr('disabled', true);
+            $(this).children('input[type=submit]').attr('disabled', true);
+
+            var acertou = 1;
+            if (_alternativa_selecionada == _gabarito) {
+                alert("Resposta Correta!");
+                $("alt-" + _id + "-" + _gabarito).css("color", "green");
+            } else {
+                if (_gabarito == "True") {
+                    _gabarito = "Verdadeiro";
+                } else if (_gabarito == "False") {
+                    _gabarito = "Falso";
+                }
+
+                alert("A resposta correta é: " + _gabarito);
+                // $("alt-" + _id + "-" + _gabarito).css("color", "red");
+            }
+        }
+
+        return false;
+    }); // form.submit
+
+}) // document.ready()
+</script>
+
+{% include 'cabecalho.html' %}
+
+<form id="form-selec-qst" class="" action="." method="post">
+    {% include 'form_filtra_questoes.html' %}
+</form>
+
+{% for questao in questoes.object_list %}
+    <form id="qst-{{ questao.id }}" class="questao" value="{{ questao.id }}" action="." method="." onsubmit="return false;">
+        <ul>
+            <li class="enunciado">
+                <p>{{ questao.prova }} - {{ questao.id }}. {{ questao.enunciado|safe }}</p>
+            </li>
+
+            {% if questao.alternativa_A %}
+                <li class="alternativa">
+                    <input type="radio" name="alternativa" id="alt-{{ questao.id }}-A" value="A">A. {{ questao.alternativa_A|safe }}</input>
+                </li>
+
+                <li class="alternativa">
+                    <input type="radio" name="alternativa" id="alt-{{ questao.id }}-B" value="B">B. {{ questao.alternativa_B|safe }}</input>
+                </li>
+
+                <li class="alternativa">
+                    <input type="radio" name="alternativa" id="alt-{{ questao.id }}-C" value="C">C. {{ questao.alternativa_C|safe }}</input>
+                </li>
+            {% else %}
+                <li>
+                    <input type="radio" name="{{ questao.id }}" value="1">Verdadeiro</input>
+                </li>
+                <li>
+                    <input type="radio" name="{{ questao.id }}" value="0">Falso</input>
+                </li>
+            {% endif %}
+
+            {% if questao.alternativa_D %}
+            <li class="alternativa">
+                <input type="radio" name="alternativa" id="alt-{{ questao.id }}-D" value="D">D. {{ questao.alternativa_D|safe }}</input>
+            </li>
+            {% endif %}
+
+            {% if questao.alternativa_E %}
+            <li class="alternativa">
+                <input type="radio" name="alternativa" id="alt-{{ questao.id }}-E" value="E">E. {{ questao.alternativa_E|safe }}</input>
+            </li>
+            {% endif %}
+        </ul>
+
+        <input type="hidden" id="gab-{{ questao.id }}" value="{{ questao.gabarito }}" />
+
+        <input type="submit" class="botao-resolver" value="Resolver" />
+
+        <span id="resp-{{ questao.id }}"></span>
+    </form>
+
+    <div class="comentarios">
+    <div class="comentarios_titulo">Comentários</div>
+        <div class="comentarios_conteudo">
+        {% get_comment_list for questao as comentarios %}
+        {% for comentario in comentarios %}
+            <div class="comentario">
+                Nome: {{ comentario.name }}<br/>
+                {% if comentario.url %}
+                    URL: {{ comentario.url }}
+                {% endif %}
+                <div class="comentario_conteudo">
+                    {{ comentario.comment|linebreaks }}
+                </div>
+            </div>
+        {% endfor %}
+
+        {% render_comment_form for questao %}
+        </div>
+    </div>
+
+{% empty %}
+    <span class="erro">Não há questões cadastradas</span>
+{% endfor %}
+
+<div class="pagination">
+    <span class="step-links">
+        {% if questoes.has_previous %}
+            <a href="?page={{ questoes.previous_page_number }}">Anterior</a>
+        {% endif %}
+
+        <span class="current">
+            Página {{ questoes.number }} de {{ questoes.paginator.num_pages }}.
+        </span>
+
+        {% if questoes.has_next %}
+            <a href="?page={{ questoes.next_page_number }}">Próxima</a>
+        {% endif %}
+    </span>
+</div>
+
+{% endblock body %}

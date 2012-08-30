@@ -1,0 +1,75 @@
+{% extends 'base.html' %}
+
+{% block body %}
+
+<header>
+{% if user.id != None %}
+    <div id="link-logout">
+        {{ user }} | <a href="/logout/">Logout</a>
+    </div>
+{% else %}
+    <div id="link-login">
+        <a href="/login/">Login</a>
+    </div>
+{% endif %}
+</header>
+{% for questao in lst_questoes %}
+    <div class="questao">
+
+        <ul>
+            <li class="enunciado">
+                <p>{{ questao.prova }} - {{ questao.id }}. {{ questao.enunciado|safe }}</p>
+            </li>
+
+            {% if questao.alternativa_A %}
+                <li class="alternativa">
+                    <input type="radio" name="alternativa" id="alt-{{ questao.id }}-A" value="A">A. {{ questao.alternativa_A|safe }}</input>
+                </li>
+
+                <li class="alternativa">
+                    <input type="radio" name="alternativa" id="alt-{{ questao.id }}-B" value="B">B. {{ questao.alternativa_B|safe }}</input>
+                </li>
+
+                <li class="alternativa">
+                    <input type="radio" name="alternativa" id="alt-{{ questao.id }}-C" value="C">C. {{ questao.alternativa_C|safe }}</input>
+                </li>
+            {% else %}
+                <li>
+                    <input type="radio" name="{{ questao.id }}" value="1">Verdadeiro</input>
+                </li>
+                <li>
+                    <input type="radio" name="{{ questao.id }}" value="0">Falso</input>
+                </li>
+            {% endif %}
+
+            {% if questao.alternativa_D %}
+            <li class="alternativa}">
+                <input type="radio" name="{{ questao.id }}" value="D">D. {{ questao.alternativa_D|safe }}</input>
+            </li>
+            {% endif %}
+
+            {% if questao.alternativa_E %}
+            <li class="alternativa">
+                <input type="radio" name="{{ questao.id }}" value="E">E. {{ questao.alternativa_E|safe }}</input>
+            </li>
+            {% endif %}
+        </ul>
+
+        {% if questao.acertou == 1 %}
+        <span class="resposta_correta">
+            Alternativa selecionada: {{ questao.alternativa_selecionada }}
+            - Você Acertou!
+        </span>
+        {% else %}
+        <span class="resposta_errada">
+            Alternativa selecionada: {{ questao.alternativa_selecionada }}
+            - Você Errou (A Resposta Correta é: {{ questao.gabarito }})
+        </span>
+        {% endif %}
+
+    </div>
+{% empty %}
+    Erro no recebimento das questões.
+{% endfor %}
+
+{% endblock body %}
