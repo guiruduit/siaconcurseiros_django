@@ -13,7 +13,8 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2', # Add 'postgresql_psycopg2', 'postgresql', 'mysql', 'sqlite3' or 'oracle'.
         'NAME': 'guiruduit_siaconcurseiros',                      # Or path to database file if using sqlite3.
-        'USER': 'postgres',                      # Not used with sqlite3.
+#        'USER': 'postgres',                      # Not used with sqlite3.
+        'USER': 'guiruduit_siaconcurseiros',                      # Not used with sqlite3.
 #        'PASSWORD': 'postgres',                  # Not used with sqlite3.
         'PASSWORD': 'sonkao10',                  # Not used with sqlite3.
         'HOST': 'localhost',                      # Set to empty string for localhost. Not used with sqlite3.
@@ -110,7 +111,7 @@ TEMPLATE_DIRS = (
     # Put strings here, like "/home/html/django_templates" or "C:/www/django/templates".
     # Always use forward slashes, even on Windows.
     # Don't forget to use absolute paths, not relative paths.
-    '/home/guiruduit/webapps/siaconcurseiros_django/templates'
+    '/home/guiruduit/webapps/siaconcurseiros_django/siaconcurseiros_django/siaconcurseiros_django/templates'
 )
 
 INSTALLED_APPS = (
