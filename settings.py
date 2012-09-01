@@ -14,7 +14,8 @@ DATABASES = {
         'ENGINE': 'django.db.backends.postgresql_psycopg2', # Add 'postgresql_psycopg2', 'postgresql', 'mysql', 'sqlite3' or 'oracle'.
         'NAME': 'guiruduit_siaconcurseiros',                      # Or path to database file if using sqlite3.
         'USER': 'postgres',                      # Not used with sqlite3.
-        'PASSWORD': 'postgres',                  # Not used with sqlite3.
+#        'PASSWORD': 'postgres',                  # Not used with sqlite3.
+        'PASSWORD': 'sonkao10',                  # Not used with sqlite3.
         'HOST': 'localhost',                      # Set to empty string for localhost. Not used with sqlite3.
         'PORT': '5432',                      # Set to empty string for default. Not used with sqlite3.
     }
@@ -61,8 +62,8 @@ STATIC_ROOT = '/home/guiruduit/webapps/siaconcurseiros_static'
 
 # URL prefix for static files.
 # Example: "http://media.lawrence.com/static/"
-STATIC_URL = 'http://localhost:8080/static'
-#STATIC_URL = 'http://guiruduit.webfactional.com/static'
+#STATIC_URL = 'http://localhost:8080/static'
+STATIC_URL = 'http://guiruduit.webfactional.com/static'
 
 # URL prefix for admin static files -- CSS, JavaScript and images.
 # Make sure to use a trailing slash.
@@ -167,3 +168,9 @@ TEMPLATE_CONTEXT_PROCESSORS = (
     # required to render correct templates (grappelli+admin-tools or grappelli "standalone")
 #    "grappelli.context_processors.admin_template_path",
 )
+
+EMAIL_HOST = 'smtp.webfaction.com'
+EMAIL_HOST_USER = 'mailbox_guiruduit'
+EMAIL_HOST_PASSWORD = 'sonkao10'
+DEFAULT_FROM_EMAIL = 'mail@guiruduit.webfactional.com'
+SERVER_EMAIL = 'mail@guiruduit.webfactional.com'
