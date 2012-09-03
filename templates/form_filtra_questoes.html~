@@ -3,6 +3,12 @@
     <table id="table-selec-qst">
 
         <tr>
+            <td colspan="4">
+            <label>Este site está em sua versão BETA - disponível precipuamente para testes/validação.</label>
+            </td>
+        </tr>
+
+        <tr>
 
             <td>
                 Concurso:
@@ -69,13 +75,16 @@
             </td>
 
             <td>
+            <label title="Nesta versão BETA estamos utilizando apenas a disciplina Português, mais a frente quando o sistema for considerado estável as outras disciplinas serão liberadas.">
                 Disciplina:
                 <select name="disciplina">
-                    <option value="">Todas</option>
+<!--                    <option value="">Todas</option>-->
+                    <option value="portugues">Português</option>
                     {% for disciplina in disciplinas %}
                         <option value="{{ disciplina.id }}">{{ disciplina }}</option>
                     {% endfor %}
                 </select>
+            </label>
             </td>
 
             <td>
@@ -130,7 +139,9 @@
 
         <tr class="botao-TAI">
             <td colspan="4">
-                Teste Adaptativo Informatizado:
+                <label title="Testes Adaptativos são testes gerados de acordo com o nível de conhecimento do usuário. Para o fazer você deve possuir cadastro e estar logado.">
+                    Teste Adaptativo Informatizado:
+                </label>
                 <input type="checkbox" name="TAI" title="Testes Adaptativos são testes gerados de acordo com o nível de conhecimento do usuário. Para o fazer você deve possuir cadastro e estar logado.">
             </td>
         </tr>

@@ -3,22 +3,23 @@
 DEBUG = True
 TEMPLATE_DEBUG = DEBUG
 
-ADMINS = (
-    ('Guilherme de Moraes Ruduit', 'guiruduit@gmail.com'),
-)
+ADMINS = (('Guilherme de Moraes Ruduit', 'guiruduit@gmail.com'),)
 
 MANAGERS = ADMINS
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.postgresql_psycopg2', # Add 'postgresql_psycopg2', 'postgresql', 'mysql', 'sqlite3' or 'oracle'.
-        'NAME': 'guiruduit_siaconcurseiros',                      # Or path to database file if using sqlite3.
-        'USER': 'postgres',                      # Not used with sqlite3.
-#        'USER': 'guiruduit_siaconcurseiros',                      # Not used with sqlite3.
-        'PASSWORD': 'postgres',                  # Not used with sqlite3.
-#        'PASSWORD': 'sonkao10',                  # Not used with sqlite3.
-        'HOST': 'localhost',                      # Set to empty string for localhost. Not used with sqlite3.
-        'PORT': '5432',                      # Set to empty string for default. Not used with sqlite3.
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': 'guiruduit_siaconcurseiros',
+
+        'USER': 'postgres',
+        'PASSWORD': 'postgres',
+
+#        'USER': 'guiruduit_siaconcurseiros',
+#        'PASSWORD': 'sonkao10',
+
+        'HOST': 'localhost',
+        'PORT': '5432',
     }
 }
 
@@ -69,15 +70,16 @@ STATIC_URL = 'http://guiruduit.webfactional.com/static'
 # URL prefix for admin static files -- CSS, JavaScript and images.
 # Make sure to use a trailing slash.
 # Examples: "http://foo.com/static/admin/", "/static/admin/".
-ADMIN_MEDIA_PREFIX = '/static/admin/'
+ADMIN_MEDIA_PREFIX = '/static/admin/grappelli'
 #ADMIN_MEDIA_PREFIX = 'http://localhost:8000/static/admin/'
 
 # Additional locations of static files
-STATICFILES_DIRS = (
-    # Put strings here, like "/home/html/static" or "C:/www/django/static".
-    # Always use forward slashes, even on Windows.
-    # Don't forget to use absolute paths, not relative paths.
-)
+#STATICFILES_DIRS = (
+#    # Put strings here, like "/home/html/static" or "C:/www/django/static".
+#    # Always use forward slashes, even on Windows.
+#    # Don't forget to use absolute paths, not relative paths.
+#    '/home/guiruduit/webapps/siaconcurseiros_static',
+#)
 
 # List of finder classes that know how to find static files in
 # various locations.
@@ -106,6 +108,9 @@ MIDDLEWARE_CLASSES = (
 )
 
 ROOT_URLCONF = 'siaconcurseiros_django.urls'
+
+# Python dotted path to the WSGI application used by Django's runserver.
+WSGI_APPLICATION = 'siaconcurseiros_django.wsgi.application'
 
 TEMPLATE_DIRS = (
     # Put strings here, like "/home/html/django_templates" or "C:/www/django/templates".
@@ -162,8 +167,9 @@ LOGIN_REDIRECT_URL = '/'
 
 TEMPLATE_CONTEXT_PROCESSORS = (
     # required by django.contrib.admin anyway
-    "django.core.context_processors.auth",
+    "django.contrib.auth.context_processors.auth",
     # required by grappelli
+#    "django.contrib.auth.context_processors.request"
     "django.core.context_processors.request",
 
     # required to render correct templates (grappelli+admin-tools or grappelli "standalone")

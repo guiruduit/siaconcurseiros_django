@@ -1,4 +1,13 @@
 <header>
+
+    <label
+        title="Neste site, apresenta-se ferramenta computacional que visa maximizar os ganhos do estudo para concursos público através de exercícíos.
+
+Para tanto esta ferramenta utiliza o conceito de Testes Adaptativos Informatizados, ou seja, ela procura apresentar questões compatíveis ao nível de preparo do usuário. Objetivando o constante desafio e consequente evolução do estudante."
+        id="descricao">
+            SIAConcurseiros
+    </label>
+
 {% if user.id != None %}
     <div id="link-logout">
         <label title="Nível de Preparo: {{ nivel_de_preparo }}
@@ -11,4 +20,5 @@ Questões Respondidas Corretamente: {{ numero_questoes_acertadas_pelo_user }}">{
         <a href="/login/">Login</a>
     </div>
 {% endif %}
+
 </header>

@@ -23,7 +23,8 @@ class UserProfileAdmin(UserAdmin):
 class QuestaoAdmin(admin.ModelAdmin):
 
     class Media:
-        js = ['http://localhost:8000/media/admin/tinymce/jscripts/tiny_mce/tiny_mce.js', '/media/tinymce_setup/tinymce_setup.js', ]
+#        js = ['http://localhost:8000/media/admin/tinymce/jscripts/tiny_mce/tiny_mce.js', '/media/tinymce_setup/tinymce_setup.js', ]
+        js = ['/static/admin/tinymce/jscripts/tiny_mce/tiny_mce.js', '/static/tinymce_setup/tinymce_setup.js', ]
 
 admin.site.register(User, UserProfileAdmin)
 admin.site.register(Banca)
