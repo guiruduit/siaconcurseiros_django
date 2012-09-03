@@ -107,9 +107,6 @@ $(document).ready(function(){
         {% for comentario in comentarios %}
             <div class="comentario">
                 Nome: {{ comentario.name }}<br/>
-                {% if comentario.url %}
-                    URL: {{ comentario.url }}
-                {% endif %}
                 <div class="comentario_conteudo">
                     {{ comentario.comment|linebreaks }}
                 </div>

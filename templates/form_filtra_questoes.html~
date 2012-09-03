@@ -2,8 +2,8 @@
 
     <table id="table-selec-qst">
 
-        <tr>
-            <td colspan="4">
+        <tr id="aviso">
+            <td colspan="6">
             <label>Este site está em sua versão BETA - disponível precipuamente para testes/validação.</label>
             </td>
         </tr>
@@ -11,9 +11,16 @@
         <tr>
 
             <td>
-                Concurso:
+<!--                Concurso:-->
+<!--                <select name="concurso">-->
+<!--                    <option value="">Todos</option>-->
+<!--                    {% for concurso in concursos %}-->
+<!--                        <option value="{{ concurso.id }}">{{ concurso }}</option>-->
+<!--                    {% endfor %}-->
+<!--                </select>-->
+
                 <select name="concurso">
-                    <option value="">Todos</option>
+                    <option value="">Concurso</option>
                     {% for concurso in concursos %}
                         <option value="{{ concurso.id }}">{{ concurso }}</option>
                     {% endfor %}
@@ -21,9 +28,16 @@
             </td>
 
             <td>
-                Instituição:
+<!--                Instituição:-->
+<!--                <select name="instituicao">-->
+<!--                    <option value="{{ None }}">Todos</option>-->
+<!--                    {% for instituicao in instituicoes %}-->
+<!--                        <option value="{{ instituicao }}">{{ instituicao }}</option>-->
+<!--                    {% endfor %}-->
+<!--                </select>-->
+
                 <select name="instituicao">
-                    <option value="{{ None }}">Todos</option>
+                    <option value="{{ None }}">Instituição</option>
                     {% for instituicao in instituicoes %}
                         <option value="{{ instituicao }}">{{ instituicao }}</option>
                     {% endfor %}
@@ -31,9 +45,16 @@
             </td>
 
             <td>
-                Ano:
+<!--                Ano:-->
+<!--                <select name="ano">-->
+<!--                    <option value="">Todos</option>-->
+<!--                    {% for ano in anos %}-->
+<!--                        <option value="{{ ano }}">{{ ano }}</option>-->
+<!--                    {% endfor %}-->
+<!--                </select>-->
+
                 <select name="ano">
-                    <option value="">Todos</option>
+                    <option value="">Ano</option>
                     {% for ano in anos %}
                         <option value="{{ ano }}">{{ ano }}</option>
                     {% endfor %}
@@ -41,11 +62,52 @@
             </td>
 
             <td>
-                Banca:
+<!--                Banca:-->
+<!--                <select name="banca">-->
+<!--                    <option value="">Todos</option>-->
+<!--                    {% for banca in bancas %}-->
+<!--                        <option value="{{ banca.id }}">{{ banca }}</option>-->
+<!--                    {% endfor %}-->
+<!--                </select>-->
+
                 <select name="banca">
-                    <option value="">Todos</option>
+                    <option value="">Banca</option>
                     {% for banca in bancas %}
                         <option value="{{ banca.id }}">{{ banca }}</option>
+                    {% endfor %}
+                </select>
+            </td>
+
+            <td>
+<!--                Cargo:-->
+<!--                <select name="cargo">-->
+<!--                    <option value="">Todos</option>-->
+<!--                    {% for cargo in cargos %}-->
+<!--                        <option value="{{ cargo }}">{{ cargo }}</option>-->
+<!--                    {% endfor %}-->
+<!--                </select>-->
+
+                <select name="cargo">
+                    <option value="">Cargo</option>
+                    {% for cargo in cargos %}
+                        <option value="{{ cargo }}">{{ cargo }}</option>
+                    {% endfor %}
+                </select>
+            </td>
+
+            <td>
+<!--                Prova:-->
+<!--                <select name="prova">-->
+<!--                    <option value="">Todos</option>-->
+<!--                    {% for prova in provas %}-->
+<!--                        <option value="{{ prova.id }}">{{ prova }}</option>-->
+<!--                    {% endfor %}-->
+<!--                </select>-->
+
+                <select name="prova">
+                    <option value="">Prova</option>
+                    {% for prova in provas %}
+                        <option value="{{ prova.id }}">{{ prova }}</option>
                     {% endfor %}
                 </select>
             </td>
@@ -55,30 +117,20 @@
         <tr>
 
             <td>
-                Cargo:
-                <select name="cargo">
-                    <option value="">Todos</option>
-                    {% for cargo in cargos %}
-                        <option value="{{ cargo }}">{{ cargo }}</option>
-                    {% endfor %}
-                </select>
-            </td>
-
-            <td>
-                Prova:
-                <select name="prova">
-                    <option value="">Todos</option>
-                    {% for prova in provas %}
-                        <option value="{{ prova.id }}">{{ prova }}</option>
-                    {% endfor %}
-                </select>
-            </td>
-
-            <td>
-            <label title="Nesta versão BETA estamos utilizando apenas a disciplina Português, mais a frente quando o sistema for considerado estável as outras disciplinas serão liberadas.">
-                Disciplina:
-                <select name="disciplina">
+<!--            <label title="Nesta versão BETA estamos utilizando apenas a disciplina Português, mais a frente quando o sistema for considerado estável as outras disciplinas serão liberadas.">-->
+<!--                Disciplina:-->
+<!--                <select name="disciplina">-->
 <!--                    <option value="">Todas</option>-->
+<!--                    <option value="portugues">Português</option>-->
+<!--                    {% for disciplina in disciplinas %}-->
+<!--                        <option value="{{ disciplina.id }}">{{ disciplina }}</option>-->
+<!--                    {% endfor %}-->
+<!--                </select>-->
+<!--            </label>-->
+
+            <label title="Nesta versão BETA estamos utilizando apenas a disciplina Português, mais a frente quando o sistema for considerado estável as outras disciplinas serão liberadas.">
+                <select name="disciplina">
+                    <option value="portugues">Disciplina</option>
                     <option value="portugues">Português</option>
                     {% for disciplina in disciplinas %}
                         <option value="{{ disciplina.id }}">{{ disciplina }}</option>
@@ -88,23 +140,33 @@
             </td>
 
             <td>
-                Assunto:
+<!--                Assunto:-->
+<!--                <select name="assunto">-->
+<!--                    <option value="">Todos</option>-->
+<!--                    {% for assunto in assuntos %}-->
+<!--                        <option value="{{ assunto.id }}">{{ assunto }}</option>-->
+<!--                    {% endfor %}-->
+<!--                </select>-->
+
                 <select name="assunto">
-                    <option value="">Todos</option>
+                    <option value="">Assunto</option>
                     {% for assunto in assuntos %}
                         <option value="{{ assunto.id }}">{{ assunto }}</option>
                     {% endfor %}
                 </select>
             </td>
 
-        </tr>
-
-        <tr>
-
             <td>
-                Área de Atuação:
+<!--                Área de Atuação:-->
+<!--                <select name="area_de_atuacao">-->
+<!--                    <option value="">Todas</option>-->
+<!--                    {% for area_de_atuacao in areas_de_atuacao %}-->
+<!--                        <option value="{{ area_de_atuacao.id }}">{{ area_de_atuacao }}</option>-->
+<!--                    {% endfor %}-->
+<!--                </select>-->
+
                 <select name="area_de_atuacao">
-                    <option value="">Todas</option>
+                    <option value="">Área de Atuação</option>
                     {% for area_de_atuacao in areas_de_atuacao %}
                         <option value="{{ area_de_atuacao.id }}">{{ area_de_atuacao }}</option>
                     {% endfor %}
@@ -112,9 +174,16 @@
             </td>
 
             <td>
-                Nível de Ensino:
+<!--                Nível de Ensino:-->
+<!--                <select name="nivel_de_ensino">-->
+<!--                    <option value="">Todos</option>-->
+<!--                    {% for nivel_de_ensino in niveis_de_ensino %}-->
+<!--                        <option value="{{ nivel_de_ensino }}">{{ nivel_de_ensino }}</option>-->
+<!--                    {% endfor %}-->
+<!--                </select>-->
+
                 <select name="nivel_de_ensino">
-                    <option value="">Todos</option>
+                    <option value="">Nível de Ensino</option>
                     {% for nivel_de_ensino in niveis_de_ensino %}
                         <option value="{{ nivel_de_ensino }}">{{ nivel_de_ensino }}</option>
                     {% endfor %}
@@ -122,23 +191,37 @@
             </td>
 
             <td>
-                Tipo de Questão:
+<!--                Tipo de Questão:-->
+<!--                <select name="tipo_de_questao">-->
+<!--                    <option value="">Todas</option>-->
+<!--                    <option value="multipla_escolha">Múltipla Escolha</option>-->
+<!--                    <option value="verdadeiro_ou_falso">Verdadeiro ou Falso</option>-->
+<!--                </select>-->
+
                 <select name="tipo_de_questao">
-                    <option value="">Todas</option>
+                    <option value="">Tipo de Questão</option>
                     <option value="multipla_escolha">Múltipla Escolha</option>
                     <option value="verdadeiro_ou_falso">Verdadeiro ou Falso</option>
                 </select>
             </td>
 
             <td>
-                Quantidade de Questões:
-                <input type="text" name="quantidade_questoes" value="10"></input>
+<!--                Quantidade de Questões:-->
+<!--                <input type="text" name="quantidade_questoes" value="10"></input>-->
+
+                <select name="quantidade_questoes">
+                    <option value="10">Quantidade de Questões</option>
+                    <option value="5">5</option>
+                    <option value="10">10</option>
+                    <option value="15">15</option>
+                    <option value="20">20</option>
+                </select>
             </td>
 
         </tr>
 
-        <tr class="botao-TAI">
-            <td colspan="4">
+        <tr class="div-TAI">
+            <td colspan="6" id="div-TAI">
                 <label title="Testes Adaptativos são testes gerados de acordo com o nível de conhecimento do usuário. Para o fazer você deve possuir cadastro e estar logado.">
                     Teste Adaptativo Informatizado:
                 </label>

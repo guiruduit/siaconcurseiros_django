@@ -48,6 +48,8 @@ $(document).ready(function(){
 
 {% include 'cabecalho.html' %}
 
+<div id='container'>
+
 <form id="form-selec-qst" class="" action="." method="post">
     {% include 'form_filtra_questoes.html' %}
 </form>
@@ -135,6 +137,8 @@ $(document).ready(function(){
             <a href="?page={{ questoes.next_page_number }}">Próxima</a>
         {% endif %}
     </span>
+</div>
+
 </div>
 
 {% endblock body %}
