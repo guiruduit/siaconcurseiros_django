@@ -230,7 +230,7 @@
         </tr>
 
         <tr>
-            <td colspan="4">
+            <td colspan="6">
                 <input type="submit" class="botao-filtrar-qst" value="Filtrar Questões" />
             </td>
         </tr>

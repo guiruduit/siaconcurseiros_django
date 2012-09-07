@@ -199,3 +199,11 @@ class _QuestaoDeVerdadeiroOuFalso():
         self.acertou = acertou
         self.alternativa_selecionada = alternativa_selecionada
         self.comentarios = comentarios
+
+class ValidacaoTCC(models.Model):
+
+    user = models.ForeignKey(User, unique=True, blank=False)
+    produtividade = models.IntegerField()
+    satisfacao = models.IntegerField()
+    efetividade = models.IntegerField()
+    usabilidade = models.IntegerField()

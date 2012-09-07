@@ -1,0 +1,99 @@
+{% extends 'base.html' %}
+
+{% block body %}
+
+{% include 'cabecalho.html' %}
+
+<div id="container2">
+
+<form id="" class="" action="." method="post">
+{% csrf_token %}
+
+    <table id="table-val-tcc">
+
+        {% if user.id != None %}
+        <tr id="aviso">
+            <td colspan="6">
+            <label>
+                Este formulário de validação do projeto só fica ativo quando se esta logado.<br/ >
+                Caso você não possua cadastro, cadastra-se rapidamente neste link
+                <label title="Basta informar um usuário e senha, é realmente muito rápido!">
+                    <a href="/register/">Cadastre-se!</a>
+                </label>
+                <br />
+                O formulário se apresenta desta forma, pois só é possível utilizar o sistema de Testes Adaptaivos quando logado no sistema.<br />
+                Grato pela compreensão e apoio!
+            </label>
+            </td>
+        </tr>
+        {% endif %}
+
+        <tr class="qst">
+            <td><label>O SIAConcurseiros cumpriu com a proposta de facilitar o estudo através de exercícios?</label></td>
+            <td>
+                <select name="produtividade">
+                    <option value="5">Absolutamente Sim.</option>
+                    <option value="4">Sim.</option>
+                    <option value="3">Talvez.</option>
+                    <option value="2">Não.</option>
+                    <option value="1">Absolutamente Não.</option>
+                </select>
+            </td>
+        </tr>
+
+        <tr class="qst">
+            <td><label>Você sente que a plataforma apresentada pelo SIAConcurseiros agrega valor à sua preparação?</label></td>
+            <td>
+                <select name="satisfacao">
+                    <option value="5">Absolutamente Sim.</option>
+                    <option value="4">Sim.</option>
+                    <option value="3">Talvez.</option>
+                    <option value="2">Não.</option>
+                    <option value="1">Absolutamente Não.</option>
+                </select>
+            </td>
+        </tr>
+
+        <tr class="qst">
+            <td><label>Você utilizou algum sistema/site semelhante após conhecer o SIAConcurseiros?</label></td>
+            <td>
+                <select name="efetividade">
+                    <option value="5">Absolutamente Sim.</option>
+                    <option value="4">Sim.</option>
+                    <option value="3">Talvez.</option>
+                    <option value="2">Não.</option>
+                    <option value="1">Absolutamente Não.</option>
+                </select>
+            </td>
+        </tr>
+
+        <tr class="qst">
+            <td><label>Você considerou fácil utilizar o SIAConcurseiros?</label></td>
+            <td>
+                <select name="usabilidade">
+                    <option value="5">Absolutamente Sim.</option>
+                    <option value="4">Sim.</option>
+                    <option value="3">Talvez.</option>
+                    <option value="2">Não.</option>
+                    <option value="1">Absolutamente Não.</option>
+                </select>
+            </td>
+        </tr>
+
+        <tr>
+            <td colspan="2" id="div-submit">
+            {% if user.id != None %}
+                <input type="submit" class="" value="Enviar" />
+            {% else %}
+                <input type="submit" class="" value="Enviar" disabled />
+            {% endif %}
+            </td>
+        </tr>
+
+    </table>
+
+</form>
+
+</div>
+
+{% endblock body %}

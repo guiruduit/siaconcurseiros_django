@@ -1,11 +1,11 @@
 # -*- coding: utf-8 -*-
 
 # Projeto
-from models import QuestaoDeMultiplaEscolha, Concurso, Banca, Prova, Assunto, Disciplina, UserProfile, AreaDeAtuacao, QuestoesRespondidas, Questao, _QuestaoDeMultiplaEscolha, _QuestaoDeVerdadeiroOuFalso, QuestaoDeVerdadeiroOuFalso
+from models import QuestaoDeMultiplaEscolha, Concurso, Banca, Prova, Assunto, Disciplina, UserProfile, AreaDeAtuacao, QuestoesRespondidas, Questao, _QuestaoDeMultiplaEscolha, _QuestaoDeVerdadeiroOuFalso, QuestaoDeVerdadeiroOuFalso, ValidacaoTCC
 # Django
 from django.contrib.comments.models import *
 from django.contrib.auth.models import User
-from django.shortcuts import render_to_response
+from django.shortcuts import render_to_response, redirect
 from django.template import RequestContext
 from django.core.context_processors import csrf
 from django.contrib.auth.decorators import login_required
@@ -388,3 +388,16 @@ def register(request):
     else:
         form = UserCreationForm()
     return render_to_response('register.html', {'form': form}, context_instance=RequestContext(request))
+
+def validaTCC(request):
+    if request.method == 'POST':
+        ValidacaoTCC.objects.create(
+            user=request.user,
+            produtividade=request.POST['produtividade'],
+            satisfacao=request.POST['satisfacao'],
+            efetividade=request.POST['efetividade'],
+            usabilidade=request.POST['usabilidade']
+        )
+        return redirect('/')
+    else:
+        return render_to_response('form_valida_tcc.html', {}, context_instance=RequestContext(request))

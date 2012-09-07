@@ -48,6 +48,8 @@ $(document).ready(function(){
 
 {% include 'cabecalho.html' %}
 
+<div id='container'>
+
 <form id="form-selec-qst" class="" action="." method="post">
     {% include 'form_filtra_questoes.html' %}
 </form>
@@ -61,7 +63,9 @@ $(document).ready(function(){
 
             {% if questao.alternativa_A %}
                 <li class="alternativa">
-                    <input type="radio" name="alternativa" id="alt-{{ questao.id }}-A" value="A">A. {{ questao.alternativa_A|safe }}</input>
+                    <input type="radio" name="alternativa" id="alt-{{ questao.id }}-A" value="A">A.
+                        <label>{{ questao.alternativa_A|safe }}</label>
+                    </input>
                 </li>
 
                 <li class="alternativa">
@@ -113,6 +117,8 @@ $(document).ready(function(){
             </div>
         {% endfor %}
 
+        <hr />
+
         {% render_comment_form for questao %}
         </div>
     </div>
@@ -135,6 +141,8 @@ $(document).ready(function(){
             <a href="?page={{ questoes.next_page_number }}">Próxima</a>
         {% endif %}
     </span>
+</div>
+
 </div>
 
 {% endblock body %}

@@ -9,7 +9,7 @@
     <!--  editar siaconcurseiros_django/templates/uni_form/fields.html  -->
     <button type="submit">Concluir Cadastro</button>
     <br />ou<br />
-    <a href="/login/">Efetuar Login</a>
+    <a href="/login/">Login</a>
     </form>
 </section>
 

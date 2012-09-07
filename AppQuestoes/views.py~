@@ -1,11 +1,11 @@
 # -*- coding: utf-8 -*-
 
 # Projeto
-from models import QuestaoDeMultiplaEscolha, Concurso, Banca, Prova, Assunto, Disciplina, UserProfile, AreaDeAtuacao, QuestoesRespondidas, Questao, _QuestaoDeMultiplaEscolha, _QuestaoDeVerdadeiroOuFalso, QuestaoDeVerdadeiroOuFalso
+from models import QuestaoDeMultiplaEscolha, Concurso, Banca, Prova, Assunto, Disciplina, UserProfile, AreaDeAtuacao, QuestoesRespondidas, Questao, _QuestaoDeMultiplaEscolha, _QuestaoDeVerdadeiroOuFalso, QuestaoDeVerdadeiroOuFalso, ValidacaoTCC
 # Django
 from django.contrib.comments.models import *
 from django.contrib.auth.models import User
-from django.shortcuts import render_to_response
+from django.shortcuts import render_to_response, redirect
 from django.template import RequestContext
 from django.core.context_processors import csrf
 from django.contrib.auth.decorators import login_required
@@ -271,42 +271,42 @@ def ajustaNiveis(user, _questao):
 
     transaction.commit()
 
-comentarios = []
-questoes = []
-_questoes = []
+#comentarios = []
+#questoes = []
+#_questoes = []
 
-comentarios = Comment.objects.all()
-questoes = QuestaoDeMultiplaEscolha.objects.all()
+#comentarios = Comment.objects.all()
+#questoes = QuestaoDeMultiplaEscolha.objects.all()
 
-_alternativa_selecionada = "A"
+#_alternativa_selecionada = "A"
 
-for questao in questoes:
+#for questao in questoes:
 
-    try:
-        _comentarios = Comment.objects.get(object_pk=questao.id)
-    except:
-        _comentarios = []
+#    try:
+#        _comentarios = Comment.objects.get(object_pk=questao.id)
+#    except:
+#        _comentarios = []
 
-    _questao = _QuestaoDeMultiplaEscolha(
-        id=questao.id,
-        prova=questao.prova,
-        assunto=questao.assunto,
-        enunciado=questao.enunciado,
-        alternativa_A=questao.alternativa_A,
-        alternativa_B=questao.alternativa_B,
-        alternativa_C=questao.alternativa_C,
-        alternativa_D=questao.alternativa_D,
-        alternativa_E=questao.alternativa_E,
-        gabarito=questao.gabarito,
-        acertou=(1 if questao.gabarito == _alternativa_selecionada else 0),
-        alternativa_selecionada=_alternativa_selecionada,
-        comentarios=_comentarios
-    )
-    _questoes.append(_questao)
+#    _questao = _QuestaoDeMultiplaEscolha(
+#        id=questao.id,
+#        prova=questao.prova,
+#        assunto=questao.assunto,
+#        enunciado=questao.enunciado,
+#        alternativa_A=questao.alternativa_A,
+#        alternativa_B=questao.alternativa_B,
+#        alternativa_C=questao.alternativa_C,
+#        alternativa_D=questao.alternativa_D,
+#        alternativa_E=questao.alternativa_E,
+#        gabarito=questao.gabarito,
+#        acertou=(1 if questao.gabarito == _alternativa_selecionada else 0),
+#        alternativa_selecionada=_alternativa_selecionada,
+#        comentarios=_comentarios
+#    )
+#    _questoes.append(_questao)
 
-for _q in _questoes:
-    print _q.id
-    print _q.comentarios
+#for _q in _questoes:
+#    print _q.id
+#    print _q.comentarios
 
 def corrigeTAI(request):
     lst_questoes = []
@@ -388,3 +388,16 @@ def register(request):
     else:
         form = UserCreationForm()
     return render_to_response('register.html', {'form': form}, context_instance=RequestContext(request))
+
+def validaTCC(request):
+    if request.method == 'POST':
+        ValidacaoTCC.objects.create(
+            user=request.user,
+            produtividade=request.POST['produtividade'],
+            satisfacao=request.POST['satisfacao'],
+            efetividade=request.POST['efetividade'],
+            usabilidade=request.POST['usabilidade']
+        )
+        return redirect('index')
+    else:
+        return render_to_response('form_valida_tcc.html', {}, context_instance=RequestContext(request))

@@ -1,9 +1,14 @@
 <header>
 
     <label
-        title=""
+        title="Este é um Trabalho de Conclusão de Curso de Análise e Desenvolvimento de Sistemas e nele apresenta-se ferramenta computacional que visa maximizar os ganhos do estudo para concursos público através de exercícíos.
+
+Para tanto esta ferramenta utiliza o conceito de Testes Adaptativos Informatizados, ou seja, ela procura apresentar questões compatíveis ao nível de preparo do usuário. Objetivando o constante desafio e consequente evolução do estudante.
+
+Ajude-me a melhorar este projeto clicando no link FEEDBACK acima e respondendo 4 perguntas."
         id="descricao">
-            SIAConcurseiros
+            <a id="a-logo" href="/">SIAConcurseiros</a> | 
+            <a id="a-feedback" href="/validacao/">FEEDBACK</a>
     </label>
 
 {% if user.id != None %}

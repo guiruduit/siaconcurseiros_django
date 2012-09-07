@@ -137,6 +137,7 @@ class _QuestaoDeMultiplaEscolha():
     acertou = 0
     alternativa_selecionada = ""
     comentarios = []
+    tipo = "AppQuestoes.questaodemultiplaescolha"
 
     def __init__(
         self,
@@ -177,6 +178,7 @@ class _QuestaoDeVerdadeiroOuFalso():
     gabarito = ""
     acertou = 0
     alternativa_selecionada = ""
+    tipo = "AppQuestoes.questaodeverdadeirooufalso"
 
     def __init__(
         self,
@@ -197,3 +199,11 @@ class _QuestaoDeVerdadeiroOuFalso():
         self.acertou = acertou
         self.alternativa_selecionada = alternativa_selecionada
         self.comentarios = comentarios
+
+class ValidacaoTCC(models.Model):
+
+    user = models.ForeignKey(User, unique=True, blank=False)
+    produtividade = models.IntegerField()
+    satisfacao = models.IntegerField()
+    efetividade = models.IntegerField()
+    usabilidade = models.IntegerField()

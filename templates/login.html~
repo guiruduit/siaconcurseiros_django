@@ -7,7 +7,6 @@
         {% csrf_token %}
         {{ form|as_uni_form }}
         <button type="submit">Login</button>
-        <br />ou<br />
         <a href="{% url AppQuestoes.views.register %}">Cadastrar-se</a>
     </form>
 </section>

@@ -21,6 +21,8 @@ urlpatterns = patterns('',
     (r'^login/$', 'django.contrib.auth.views.login', {'template_name': 'login.html'}),
     (r'^logout/$', 'django.contrib.auth.views.logout_then_login', {'login_url': '/login/'}),
     (r'^register/$', 'AppQuestoes.views.register'),
+
+    (r'^validacao/$', 'AppQuestoes.views.validaTCC'),
 )
 
 from django.conf import settings

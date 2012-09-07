@@ -63,7 +63,9 @@ $(document).ready(function(){
 
             {% if questao.alternativa_A %}
                 <li class="alternativa">
-                    <input type="radio" name="alternativa" id="alt-{{ questao.id }}-A" value="A">A. {{ questao.alternativa_A|safe }}</input>
+                    <input type="radio" name="alternativa" id="alt-{{ questao.id }}-A" value="A">A.
+                        <label>{{ questao.alternativa_A|safe }}</label>
+                    </input>
                 </li>
 
                 <li class="alternativa">
@@ -114,6 +116,8 @@ $(document).ready(function(){
                 </div>
             </div>
         {% endfor %}
+
+        <br />
 
         {% render_comment_form for questao %}
         </div>
