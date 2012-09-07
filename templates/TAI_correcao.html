@@ -2,7 +2,51 @@
 
 {% block body %}
 
+<script>
+$(document).ready(function(){
+
+    $(".comentarios_conteudo").toggle();
+    $(".comentarios_titulo").click(function(){
+        var comentarios = $(this).parent(".comentarios");
+        comentarios.children(".comentarios_conteudo").slideToggle();
+    });
+
+    $('form[id^="qst-"]').submit(function(){
+        if ( $(this).children('ul').children('li').children('input:checked').val() == null ) {
+            alert("É necessário marcar uma das alternativas antes.")
+        } else {
+            var _id = $(this).attr('id').slice(4);
+            var _gabarito = $(this).children('#gab-' + _id).val();
+            var _alternativa_selecionada = $(this).children('ul').children('li').children('input:checked').val();
+
+            $(this).children('ul').children('li').children('input').attr('disabled', true);
+            $(this).children('input[type=submit]').attr('disabled', true);
+
+            var acertou = 1;
+            if (_alternativa_selecionada == _gabarito) {
+                alert("Resposta Correta!");
+                $("alt-" + _id + "-" + _gabarito).css("color", "green");
+            } else {
+                if (_gabarito == "True") {
+                    _gabarito = "Verdadeiro";
+                } else if (_gabarito == "False") {
+                    _gabarito = "Falso";
+                }
+
+                alert("A resposta correta é: " + _gabarito);
+                // $("alt-" + _id + "-" + _gabarito).css("color", "red");
+            }
+        }
+
+        return false;
+    }); // form.submit
+
+}) // document.ready()
+</script>
+
 {% include 'cabecalho.html' %}
+
+<div id="container">
 
 {% for questao in lst_questoes %}
     <div class="questao">
@@ -115,5 +159,7 @@
 <form action="/">
     <input type="submit" value="Voltar para a Home" />
 </form>
+
+</div>
 
 {% endblock body %}

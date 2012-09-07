@@ -4,9 +4,7 @@
 
 {% include 'cabecalho.html' %}
 
-
-
-Teste Adaptativo Informatizado
+<div class="titulo-1">Teste Adaptativo Informatizado</div>
 
 <form id="form-teste-tai" class="" action="/corrige_TAI/" method="post">
 {% csrf_token %}

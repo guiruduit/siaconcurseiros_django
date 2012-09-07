@@ -4,7 +4,9 @@
 
 {% include 'cabecalho.html' %}
 
-<label class="titulo-1">Teste Adaptativo Informatizado</label>
+<div id="container">
+
+<div class="titulo-1">Teste Adaptativo Informatizado</div>
 
 <form id="form-teste-tai" class="" action="/corrige_TAI/" method="post">
 {% csrf_token %}
@@ -58,4 +60,7 @@
 
     <input type="submit" class="botao-resolver" value="Resolver" />
 </form>
+
+</div>
+
 {% endblock body %}
