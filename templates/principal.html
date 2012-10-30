@@ -38,6 +38,11 @@ $(document).ready(function(){
                 alert("A resposta correta é: " + _gabarito);
                 // $("alt-" + _id + "-" + _gabarito).css("color", "red");
             }
+            $.get("/ajustaniveis/?user=" + {{ user.id }} + "&questao=" + _id);
+            $.get("/ajustaniveis/", {questao: _id});
+            $.post("/ajustaniveis/", {var_user: {{ user.id }}, var_questao: _id});
+            $.post("/ajustaniveis/");
+            alert("Passou");
         }
 
         return false;

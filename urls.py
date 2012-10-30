@@ -23,6 +23,8 @@ urlpatterns = patterns('',
     (r'^register/$', 'AppQuestoes.views.register'),
 
     (r'^validacao/$', 'AppQuestoes.views.validaTCC'),
+
+    (r'^ajustaniveis/(?P<questao>\d+)$', 'AppQuestoes.views.encaminhaAjustaNiveis'),
 )
 
 from django.conf import settings

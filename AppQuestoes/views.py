@@ -225,10 +225,16 @@ def listaQuestoesDoNivelDoUser(request):
     nivel_de_preparo, num_questoes_respondidas_pelo_user, num_questoes_acertadas_pelo_user = buscaDadosDoUser(request.user)
     return render_to_response('TAI.html', { 'questoes': listaQuestoes(request), }, context_instance=RequestContext(request))
 
-@transaction.commit_manually
-def ajustaNiveis(user, _questao):
+def encaminhaAjustaNiveis(request, questao):
+    ajustaNiveis(request.user.id, questao)
+    return False
 
-    user_profile = UserProfile.objects.get(user__id=user.id)
+@transaction.commit_manually
+#def ajustaNiveis(user, _questao):
+def ajustaNiveis(_user, _questao):
+
+#    user_profile = UserProfile.objects.get(user__id=user.id)
+    user_profile = UserProfile.objects.get(user__id=_user)
     user = user_profile.user
     questao = Questao.objects.get(pk=_questao.id)
 
@@ -361,7 +367,7 @@ def corrigeTAI(request):
             )
 
         lst_questoes.append(_questao)
-        ajustaNiveis(request.user, _questao)
+        ajustaNiveis(request.user.id, _questao)
 
         for _q in lst_questoes:
             print _q.id
@@ -396,7 +402,10 @@ def validaTCC(request):
             produtividade=request.POST['produtividade'],
             satisfacao=request.POST['satisfacao'],
             efetividade=request.POST['efetividade'],
-            usabilidade=request.POST['usabilidade']
+            usabilidade_1=request.POST['usabilidade_1'],
+            usabilidade_2=request.POST['usabilidade_2'],
+            usabilidade_3=request.POST['usabilidade_3'],
+            usabilidade_4=request.POST['usabilidade_4']
         )
         return redirect('/')
     else:

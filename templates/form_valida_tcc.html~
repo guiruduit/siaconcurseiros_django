@@ -11,7 +11,7 @@
 
     <table id="table-val-tcc">
 
-        {% if user.id != None %}
+        {% if user.id == None %}
         <tr id="aviso">
             <td colspan="6">
             <label>
