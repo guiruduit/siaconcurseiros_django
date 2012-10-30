@@ -210,3 +210,4 @@ class ValidacaoTCC(models.Model):
     usabilidade_2 = models.IntegerField()
     usabilidade_3 = models.IntegerField()
     usabilidade_4 = models.IntegerField()
+    sugestao = models.TextField()

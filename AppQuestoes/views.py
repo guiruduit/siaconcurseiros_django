@@ -405,7 +405,8 @@ def validaTCC(request):
             usabilidade_1=request.POST['usabilidade_1'],
             usabilidade_2=request.POST['usabilidade_2'],
             usabilidade_3=request.POST['usabilidade_3'],
-            usabilidade_4=request.POST['usabilidade_4']
+            usabilidade_4=request.POST['usabilidade_4'],
+            sugestao=request.POST['sugestao']
         )
         return redirect('/')
     else:

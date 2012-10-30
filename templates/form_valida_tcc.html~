@@ -68,15 +68,66 @@
         </tr>
 
         <tr class="qst">
-            <td><label>Você considerou fácil utilizar o SIAConcurseiros?</label></td>
+            <td><label>Você costuma utilizar o computador por tempo considerável no seu dia-a-dia?</label></td>
             <td>
-                <select name="usabilidade">
+                <select name="usabilidade_1">
                     <option value="5">Absolutamente Sim.</option>
                     <option value="4">Sim.</option>
                     <option value="3">Talvez.</option>
                     <option value="2">Não.</option>
                     <option value="1">Absolutamente Não.</option>
                 </select>
+            </td>
+        </tr>
+
+        <tr class="qst">
+            <td><label>Você se sente familiarizado com sistemas advindos da informática?</label></td>
+            <td>
+                <select name="usabilidade_2">
+                    <option value="5">Absolutamente Sim.</option>
+                    <option value="4">Sim.</option>
+                    <option value="3">Talvez.</option>
+                    <option value="2">Não.</option>
+                    <option value="1">Absolutamente Não.</option>
+                </select>
+            </td>
+        </tr>
+
+        <tr class="qst">
+            <td><label>Você considerou fácil de entender o conceito e aplicação do SIAConcurseiros?</label></td>
+            <td>
+                <select name="usabilidade_3">
+                    <option value="5">Absolutamente Sim.</option>
+                    <option value="4">Sim.</option>
+                    <option value="3">Talvez.</option>
+                    <option value="2">Não.</option>
+                    <option value="1">Absolutamente Não.</option>
+                </select>
+            </td>
+        </tr>
+
+        <tr class="qst">
+            <td><label>Você considerou fácil utilizar o SIAConcurseiros?</label></td>
+            <td>
+                <select name="usabilidade_4">
+                    <option value="5">Absolutamente Sim.</option>
+                    <option value="4">Sim.</option>
+                    <option value="3">Talvez.</option>
+                    <option value="2">Não.</option>
+                    <option value="1">Absolutamente Não.</option>
+                </select>
+            </td>
+        </tr>
+
+        <tr class="val-textarea">
+            <td colspan="2">
+                <label>Sugestões ou observações sobre o projeto:</label><br />
+            </td>
+        </tr>
+
+        <tr class="val-textarea">
+            <td colspan="2">
+                <textarea name="sugestao"></textarea>
             </td>
         </tr>
 

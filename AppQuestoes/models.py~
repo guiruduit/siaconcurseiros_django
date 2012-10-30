@@ -206,4 +206,7 @@ class ValidacaoTCC(models.Model):
     produtividade = models.IntegerField()
     satisfacao = models.IntegerField()
     efetividade = models.IntegerField()
-    usabilidade = models.IntegerField()
+    usabilidade_1 = models.IntegerField()
+    usabilidade_2 = models.IntegerField()
+    usabilidade_3 = models.IntegerField()
+    usabilidade_4 = models.IntegerField()
